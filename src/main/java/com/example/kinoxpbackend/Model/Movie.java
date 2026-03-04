@@ -9,21 +9,23 @@ import jakarta.persistence.Id;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-    public String title;
-    public int durationMinutes;
-    public String description;
-    public String category;
-    public int ageLimit;
+    private Long id;
+    private String title;
+    private int durationMinutes;
+    private String description;
+    private String category;
+    private int ageLimit;
+    private String image;
 
     public Movie() {}
 
-    public Movie(String title, int durationMinutes, String description, String category, int ageLimit) {
+    public Movie(String title, int durationMinutes, String description, String category, int ageLimit, String image) {
         this.title = title;
         this.durationMinutes = durationMinutes;
         this.description = description;
         this.category = category;
         this.ageLimit = ageLimit;
+        this.image = image;
     }
 
     public Long getId() {
@@ -74,7 +76,11 @@ public class Movie {
         this.ageLimit = ageLimit;
     }
 
+    public String getImage() {
+        return image;
+    }
 
-
-
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
