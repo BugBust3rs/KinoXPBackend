@@ -16,7 +16,7 @@ public class Screening {
     private Hall hall;
 
     private int startTime;
-    private int basePrice;
+    private int basePrice; // lave den om til Double
     private boolean is3D;
 
     public Screening() {}
