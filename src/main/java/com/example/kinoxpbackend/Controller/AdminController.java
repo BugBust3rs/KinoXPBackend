@@ -28,19 +28,20 @@ public class AdminController {
         }
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/session")
+    public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
+        boolean active = session.getAttribute("admin") != null;
+        return ResponseEntity.ok(Map.of("active", active));
+    }
+
 
 }
 
-@PostMapping("/logout")
-public ResponseEntity<Void> logout(HttpSession session) {
-    session.invalidate();
-    return ResponseEntity.noContent().build();
-}
-
-@GetMapping("/session")
-public ResponseEntity<Map<String, Boolean>> checkSession(HttpSession session) {
-    boolean active = session.getAttribute("admin") != null;
-    return ResponseEntity.ok(Map.of("active", active));
-}
 
 
