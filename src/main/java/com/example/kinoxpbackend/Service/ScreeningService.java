@@ -20,12 +20,12 @@ public class ScreeningService {
         this.screeningRepository = screeningRepository;
     }
 
-    //Metoder der henter alle Screening
+    //Metode der henter alle Screening
     public List<Screening> getAllScreenings(){
         return screeningRepository.findAll();
     }
 
-    //Metoder der henter en bestemt screening
+    //Metode der henter en bestemt screening
     public Screening getScreeningById(Long id){
         Optional<Screening> screeningOptional = screeningRepository.findById(id);
         if(screeningOptional.isEmpty()){
@@ -53,6 +53,11 @@ public class ScreeningService {
         screening1.setIs3D(screening.isIs3D());
         screening1.setStartTime(screening.getStartTime());
         return screeningRepository.save(screening);
+    }
+
+    //Metode der sletter en screening
+    public void deleteScreening(Long id){
+        screeningRepository.deleteById(id);
     }
 
 
