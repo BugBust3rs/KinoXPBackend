@@ -46,7 +46,11 @@ public class ScreeningController {
     }
 
     //Sletter en screening
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Screening> deleteScreening(@PathVariable Long id){
+     screeningService.deleteScreening(id);
+     return ResponseEntity.noContent().build();
+    }
 
 
 
