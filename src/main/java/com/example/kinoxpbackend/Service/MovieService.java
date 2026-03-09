@@ -1,10 +1,8 @@
 package com.example.kinoxpbackend.Service;
 
+import com.example.kinoxpbackend.Exception.NotfoundException;
 import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Model.Screening;
 import com.example.kinoxpbackend.Repository.MovieRepository;
-import exceptions.NotFoundException;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class MovieService {
         Optional<Movie> movieOptional = movieRepository.findById(id);
 
         if(movieOptional.isEmpty()) {
-            throw new NotFoundException("This movie does not exist");
+            throw new NotfoundException("This movie does not exist");
         }
         return movieOptional.get();
     }
@@ -39,7 +37,7 @@ public class MovieService {
     public Movie updateMovie(Long id, Movie movie) {
         Optional<Movie> movieOptional = movieRepository.findById(id);
         if (movieOptional.isEmpty()) {
-            throw new NotFoundException("This movie does not exist");
+            throw new NotfoundException("This movie does not exist");
         }
         Movie existingMovie = movieOptional.get();
         existingMovie.setTitle(movie.getTitle());
@@ -56,7 +54,7 @@ public class MovieService {
         Optional<Movie> movieOptional = movieRepository.findById(id);
 
         if (movieOptional.isEmpty()) {
-            throw new NotFoundException("This movie does not exist");
+            throw new NotfoundException("This movie does not exist");
         }
         movieRepository.deleteById(id);
     }
