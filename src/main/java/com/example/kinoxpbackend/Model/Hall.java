@@ -64,4 +64,5 @@ public class Hall {
     public void setModularSeating(ModularSeating modularSeating) {
         this.modularSeating = modularSeating;
     }
+
 }

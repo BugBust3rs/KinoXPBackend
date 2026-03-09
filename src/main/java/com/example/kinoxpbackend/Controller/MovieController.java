@@ -22,10 +22,15 @@ public class MovieController {
     @GetMapping
     public List<Movie> getAllMovies() {
     movieService.getAllMovies();
+
+        return  null;
+
     }
 
     @PostMapping
     public Movie createMovie() {
+
+        return null;
 
     }
 }

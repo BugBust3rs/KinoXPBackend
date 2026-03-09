@@ -7,6 +7,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.example.kinoxpbackend.Exception.NotfoundException;
 
 import java.util.List;
 import java.util.Optional;
