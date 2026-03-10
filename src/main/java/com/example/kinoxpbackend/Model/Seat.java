@@ -1,6 +1,7 @@
 package com.example.kinoxpbackend.Model;
 
 import com.example.kinoxpbackend.Model.Reservation;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +14,7 @@ public class Seat {
 
     @ManyToOne
     @JoinColumn(name = "reservation_id")
+    @JsonBackReference
     private Reservation reservation;
 
     private int seatRow;
