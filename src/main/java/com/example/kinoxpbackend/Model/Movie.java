@@ -1,9 +1,6 @@
 package com.example.kinoxpbackend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Movie {
@@ -15,11 +12,13 @@ public class Movie {
     private String description;
     private String category;
     private int ageLimit;
-    private String image;
+
+    @Lob
+    private byte[] image;
 
     public Movie() {}
 
-    public Movie(String title, int durationMinutes, String description, String category, int ageLimit, String image) {
+    public Movie(String title, int durationMinutes, String description, String category, int ageLimit, byte[] image) {
         this.title = title;
         this.durationMinutes = durationMinutes;
         this.description = description;
@@ -76,11 +75,11 @@ public class Movie {
         this.ageLimit = ageLimit;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 }

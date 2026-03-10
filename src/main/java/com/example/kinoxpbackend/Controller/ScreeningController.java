@@ -30,6 +30,12 @@ public class ScreeningController {
         return ResponseEntity.ok(screeningService.getScreeningById(id));
     }
 
+    // Get screenings for a movie
+    @GetMapping("/movie/{movieId}")
+    public ResponseEntity<List<Screening>> getScreeningsByMovieId(@PathVariable Long movieId){
+        return ResponseEntity.ok(screeningService.getScreeningsByMovieId(movieId));
+    }
+
     //tilføjer en ny film
     @PostMapping
     public ResponseEntity<Screening> createScreening(@RequestBody Screening screening){

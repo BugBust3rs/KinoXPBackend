@@ -1,9 +1,9 @@
 package com.example.kinoxpbackend.Service;
 
 
+import com.example.kinoxpbackend.Exception.NotfoundException;
 import com.example.kinoxpbackend.Model.Reservation;
 import com.example.kinoxpbackend.Repository.ReservationRepository;
-import exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ReservationService {
     public Reservation getReservationById(Long id){
         Optional<Reservation> reservationOptional = reservationRepository.findById(id);
         if(reservationOptional.isEmpty()){
-         throw new NotFoundException("Reservation with id " + id + " not found");
+         throw new NotfoundException("Reservation with id " + id + " not found");
         }
 
         return reservationOptional.get();

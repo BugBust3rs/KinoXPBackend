@@ -2,6 +2,8 @@ package com.example.kinoxpbackend.Model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Screening {
 
@@ -13,15 +15,16 @@ public class Screening {
     private Movie movie;
 
     @ManyToOne
+    @JoinColumn(name = "hall_id")
     private Hall hall;
 
-    private int startTime;
-    private int basePrice; // lave den om til Double
+    private LocalDateTime startTime;
+    private Double basePrice; // lave den om til Double
     private boolean is3D;
 
     public Screening() {}
 
-    public Screening(Movie movie, Hall hall, int startTime, int basePrice, boolean is3D) {
+    public Screening(Movie movie, Hall hall, LocalDateTime startTime, Double basePrice, boolean is3D) {
         this.movie = movie;
         this.hall = hall;
         this.startTime = startTime;
@@ -53,19 +56,19 @@ public class Screening {
         this.hall = hall;
     }
 
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public int getBasePrice() {
+    public Double getBasePrice() {
         return basePrice;
     }
 
-    public void setBasePrice(int basePrice) {
+    public void setBasePrice(Double basePrice) {
         this.basePrice = basePrice;
     }
 

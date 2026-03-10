@@ -1,8 +1,9 @@
 package com.example.kinoxpbackend.Service;
 
+import com.example.kinoxpbackend.Model.Movie;
 import com.example.kinoxpbackend.Model.Screening;
 import com.example.kinoxpbackend.Repository.ScreeningRepository;
-import exceptions.NotFoundException;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +16,11 @@ import java.util.Optional;
 @Service
 public class ScreeningService {
     private ScreeningRepository screeningRepository;
+    private MovieService movieService;
 
-    public ScreeningService(ScreeningRepository screeningRepository) {
+    public ScreeningService(ScreeningRepository screeningRepository, MovieService movieService ) {
         this.screeningRepository = screeningRepository;
+        this.movieService = movieService;
     }
 
     //Metode der henter alle Screening
@@ -29,7 +32,7 @@ public class ScreeningService {
     public Screening getScreeningById(Long id){
         Optional<Screening> screeningOptional = screeningRepository.findById(id);
         if(screeningOptional.isEmpty()){
-            throw new NotFoundException("Screening with id " + id + " not found");
+            throw new NotfoundException("Screening with id " + id + " not found");
         }
         return screeningOptional.get();
     }
@@ -46,7 +49,7 @@ public class ScreeningService {
 //            throw new NotFoundException("Screening with id " + id + " not found");
 //        }
         Screening screening1 = screeningRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Screening with id " + id + " not found"));
+                .orElseThrow(() -> new NotfoundException("Screening with id " + id + " not found"));
         screening1.setMovie(screening.getMovie());
         screening1.setHall(screening.getHall());
         screening1.setBasePrice(screening.getBasePrice());
@@ -61,4 +64,8 @@ public class ScreeningService {
     }
 
 
+    public @Nullable List<Screening> getScreeningsByMovieId(Long movieId) {
+        Movie movie = movieService.getMovieById(movieId);
+        return screeningRepository.getScreeningsByMovie(movie);
+    }
 }

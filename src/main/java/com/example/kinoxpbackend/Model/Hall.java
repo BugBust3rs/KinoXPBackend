@@ -2,14 +2,23 @@ package com.example.kinoxpbackend.Model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
+@Table(name = "halls")
 public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "row_count")
     private int rows;
+
+    @Column(name = "col_count")
     private int cols;
+
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
+    private List<Screening> screenings;
 
     @Enumerated(EnumType.STRING)
     private ModularSeating modularSeating;

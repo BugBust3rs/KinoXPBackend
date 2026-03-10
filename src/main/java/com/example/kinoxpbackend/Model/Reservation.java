@@ -1,5 +1,7 @@
 package com.example.kinoxpbackend.Model;
 
+import com.example.kinoxpbackend.Model.Screening;
+import com.example.kinoxpbackend.Model.Seat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -7,10 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "reservation")
 public class Reservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String customerName;
     private String customerEmail;
     private LocalDateTime creationDate;
@@ -19,7 +24,7 @@ public class Reservation {
     @ManyToOne
     private Screening screening;
 
-    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST} )
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
 
     public Reservation() {}
@@ -29,6 +34,16 @@ public class Reservation {
         this.customerEmail = customerEmail;
         this.creationDate = creationDate;
         this.price = price;
+    }
+
+    public void addSeat(Seat seat) {
+        seats.add(seat);
+        seat.setReservation(this);
+    }
+
+    public void removeSeat(Seat seat) {
+        seats.remove(seat);
+        seat.setReservation(null);
     }
 
     public Long getId() {
