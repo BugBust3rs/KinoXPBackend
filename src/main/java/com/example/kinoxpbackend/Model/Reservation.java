@@ -2,6 +2,7 @@ package com.example.kinoxpbackend.Model;
 
 import com.example.kinoxpbackend.Model.Screening;
 import com.example.kinoxpbackend.Model.Seat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class Reservation {
     private double price;
 
     @ManyToOne
+    @JsonManagedReference
     private Screening screening;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
