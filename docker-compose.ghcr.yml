@@ -1,5 +1,5 @@
-#services:
-#  app:
-#    image: ghcr.io/adamhoppe98/KinoXPBackend:latest
-#    ports:
-#      - "8090:8080"
+services:
+  app:
+    image: ghcr.io/bugbust3rs/kinoxpbackend:ghcr
+    ports:
+      - "8080:8080"
