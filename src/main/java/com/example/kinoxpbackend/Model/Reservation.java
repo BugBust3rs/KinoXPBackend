@@ -23,10 +23,10 @@ public class Reservation {
     private double price;
 
     @ManyToOne
-    @JsonManagedReference
     private Screening screening;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("reservation-seats")
+    @OneToMany(mappedBy = "reservation", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<Seat> seats = new ArrayList<>();
 
     public Reservation() {}

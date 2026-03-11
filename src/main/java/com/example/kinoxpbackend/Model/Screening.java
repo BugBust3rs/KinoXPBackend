@@ -1,8 +1,11 @@
 package com.example.kinoxpbackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Screening {
@@ -18,11 +21,16 @@ public class Screening {
     @JoinColumn(name = "hall_id")
     private Hall hall;
 
+    @JsonManagedReference("screening-seats")
+    @OneToMany(mappedBy = "screening", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seat> seats = new ArrayList<>();
+
     private LocalDateTime startTime;
     private Double basePrice; // lave den om til Double
     private boolean is3D;
 
-    public Screening() {}
+    public Screening() {
+    }
 
     public Screening(Movie movie, Hall hall, LocalDateTime startTime, Double basePrice, boolean is3D) {
         this.movie = movie;
@@ -30,6 +38,23 @@ public class Screening {
         this.startTime = startTime;
         this.basePrice = basePrice;
         this.is3D = is3D;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
+    }
+
+    public void addSeat(Seat seat) {
+        seats.add(seat);
+        seat.setScreening(this);
+    }
+    public void removeSeat(Seat seat) {
+        seats.remove(seat);
+        seat.setScreening(null);
     }
 
     public Long getId() {

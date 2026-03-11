@@ -1,6 +1,7 @@
 package com.example.kinoxpbackend.Model;
 
 import com.example.kinoxpbackend.Model.Reservation;
+import com.example.kinoxpbackend.Model.Screening;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -12,28 +13,38 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference("screening-seats")
+    @ManyToOne
+    @JoinColumn(name = "screening_id")
+    private Screening screening;
+
     @ManyToOne
     @JoinColumn(name = "reservation_id")
-    @JsonBackReference
+    @JsonBackReference("reservation-seats")
     private Reservation reservation;
+
+    private boolean isReserved;
+
+    @Enumerated(EnumType.STRING)
+    private ModularSeating modularSeating;
 
     private int seatRow;
     private int seatColumn;
 
     public Seat() {}
 
-    public Seat(Reservation reservation, int seatRow, int seatColumn) {
-        this.reservation = reservation;
+    public Seat(ModularSeating modularSeating, int seatRow, int seatColumn) {
+        this.modularSeating = modularSeating;
         this.seatRow = seatRow;
         this.seatColumn = seatColumn;
     }
 
-    public Long getId() {
-        return id;
+    public Screening getScreening() {
+        return screening;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setScreening(Screening screening) {
+        this.screening = screening;
     }
 
     public Reservation getReservation() {
@@ -42,6 +53,26 @@ public class Seat {
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    public boolean isReserved() {
+        return isReserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        isReserved = reserved;
+    }
+
+    public ModularSeating getModularSeating() {
+        return modularSeating;
+    }
+
+    public void setModularSeating(ModularSeating modularSeating) {
+        this.modularSeating = modularSeating;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public int getSeatRow() {

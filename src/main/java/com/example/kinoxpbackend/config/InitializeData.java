@@ -145,6 +145,22 @@ public class InitializeData {
                             basePrice,
                             is3D
                     );
+                    for (int l = 1; l <= screening.getHall().getRows(); l++) {
+                        for (int c = 1; c <= screening.getHall().getCols(); c++) {
+                            ModularSeating modularSeating = ModularSeating.BASICROW;
+
+                            if(l < 3){
+                                modularSeating = ModularSeating.COWBOYROW;
+                            } else if (l > (screening.getHall().getRows() -3)) {
+                                modularSeating = ModularSeating.COUCHROW;
+                            }
+
+                            Seat seat = new Seat(modularSeating,l, c);
+
+                            screening.addSeat(seat);
+                        }
+                    }
+
 
                     screenings.add(screeningRepository.save(screening));
                 }
@@ -161,7 +177,6 @@ public class InitializeData {
                 reservation.setCustomerEmail("customer" + (i + 1) + "@mail.com");
                 reservation.setCreationDate(LocalDateTime.now().minusDays(i));
 
-                // 1-3 seats per reservation
                 int seatCount = (i % 3) + 1;
                 double totalPrice = screening.getBasePrice() * seatCount;
 
@@ -169,13 +184,23 @@ public class InitializeData {
                 reservation.setScreening(screening);
 
                 for (int s = 0; s < seatCount; s++) {
-                    Seat seat = new Seat();
-                    seat.setSeatRow((i + s) % screening.getHall().getRows() + 1);
-                    seat.setSeatColumn((s + 1) % screening.getHall().getCols() + 1);
-                    reservation.addSeat(seat);
+                    int row = (i + s) % screening.getHall().getRows() + 1;
+                    int col = (s + 1) % screening.getHall().getCols() + 1;
+
+                    Seat seatToReserve = screening.getSeats().stream()
+                            .filter(seat -> seat.getSeatRow() == row && seat.getSeatColumn() == col)
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException(
+                                    "Seat not found: row " + row + ", col " + col));
+
+                    seatToReserve.setReserved(true);
+                    seatToReserve.setReservation(reservation);
+                    reservation.addSeat(seatToReserve);
                 }
 
                 reservationRepository.save(reservation);
+                screeningRepository.save(screening);
+
             }
         };
     }
