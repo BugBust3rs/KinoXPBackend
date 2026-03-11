@@ -1,0 +1,5 @@
+services:
+  app:
+    image: ghcr.io/bugbust3rs/kinoxpbackend:ghcr
+    ports:
+      - "8080:8080"
