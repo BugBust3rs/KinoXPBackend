@@ -2,6 +2,7 @@ package com.example.kinoxpbackend.Model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Hall {
     private int cols;
 
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
-    private List<Screening> screenings;
+    private List<Screening> screenings = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ModularSeating modularSeating;

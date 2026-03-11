@@ -2,6 +2,7 @@ package com.example.kinoxpbackend.Controller;
 
 import com.example.kinoxpbackend.Model.Reservation;
 import com.example.kinoxpbackend.Service.ReservationService;
+import com.example.kinoxpbackend.dto.ReservationRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +21,21 @@ public class ReservationController {
 
     //Henter alle reservations
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAllReservations(){
+    public ResponseEntity<List<ReservationRequest>> getAllReservations(){
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
 
 
     //Henter en bestem reservation på id
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservation(@PathVariable Long id){
+    public ResponseEntity<ReservationRequest> getReservation(@PathVariable Long id){
        return ResponseEntity.ok(reservationService.getReservationById(id));
     }
 
-    //Laver en reservation
-    @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation){
-        Reservation newReservation = reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).body(newReservation);
+    @PostMapping()
+    public ResponseEntity<ReservationRequest> createReservation(@RequestBody ReservationRequest request) {
+        ReservationRequest reservation = reservationService.createReservation(request);
+        return ResponseEntity.ok(reservation);
     }
 
     //Sletter en reservation

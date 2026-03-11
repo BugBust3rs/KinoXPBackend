@@ -1,7 +1,9 @@
 package com.example.kinoxpbackend.Service;
 
+import com.example.kinoxpbackend.Model.ModularSeating;
 import com.example.kinoxpbackend.Model.Movie;
 import com.example.kinoxpbackend.Model.Screening;
+import com.example.kinoxpbackend.Model.Seat;
 import com.example.kinoxpbackend.Repository.ScreeningRepository;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -39,6 +41,25 @@ public class ScreeningService {
 
     //Metode der opretter en screening
     public Screening createScreening(Screening screening){
+            if (screening.getSeats().isEmpty()){
+                int row = screening.getHall().getRows();
+                int col = screening.getHall().getCols();
+
+                for (int i = 0; i < row; i++){
+                    for (int j = 0; j < col; j++){
+                        ModularSeating modularSeating = ModularSeating.BASICROW;
+                        if(i < 3){
+                            modularSeating = ModularSeating.COWBOYROW;
+                        } else if (i > (row -3)) {
+                            modularSeating = ModularSeating.COUCHROW;
+                        }
+
+                        Seat seat = new Seat(modularSeating,i, j);
+                        screening.addSeat(seat);
+                    }
+                }
+            }
+
         return screeningRepository.save(screening);
     }
 
