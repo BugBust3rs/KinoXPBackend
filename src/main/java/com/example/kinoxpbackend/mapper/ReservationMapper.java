@@ -7,17 +7,16 @@ import com.example.kinoxpbackend.dto.ReservationResponse;
 
 public class ReservationMapper {
 
-    public static Reservation reservationMapper(ReservationRequest request){
+    public static Reservation requestToReservationMapper(ReservationRequest request){
         Reservation reservation = new Reservation();
         reservation.setCustomerName(request.customerName());
         reservation.setCustomerEmail(request.customerEmail());
         reservation.setCreationDate(request.creationDate());
         reservation.setPrice(request.price());
-        reservation.setId(request.id());
         return reservation;
     }
 
-    public static ReservationResponse reservationRequestMapper(Reservation reservation){
+    public static ReservationResponse reservationToResponseMapper(Reservation reservation){
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getCustomerName(),

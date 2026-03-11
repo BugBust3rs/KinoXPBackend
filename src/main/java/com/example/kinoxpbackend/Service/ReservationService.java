@@ -35,7 +35,7 @@ public class ReservationService {
         var reservations = reservationRepository.findAll();
         List<ReservationResponse> requests = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            requests.add(ReservationMapper.reservationRequestMapper(reservation));
+            requests.add(ReservationMapper.reservationToResponseMapper(reservation));
         }
 
         return requests;
@@ -51,11 +51,11 @@ public class ReservationService {
          throw new NotfoundException("Reservation with id " + id + " not found");
         }
 
-        return ReservationMapper.reservationRequestMapper(reservationOptional.get());
+        return ReservationMapper.reservationToResponseMapper(reservationOptional.get());
     }
 
     public ReservationResponse createReservation(ReservationRequest request) {
-        Reservation reservation = ReservationMapper.reservationMapper(request);
+        Reservation reservation = ReservationMapper.requestToReservationMapper(request);
 
         Screening screening = screeningRepository.findById(request.screeningId())
                 .orElseThrow(() -> new RuntimeException("Screening not found"));
@@ -70,7 +70,7 @@ public class ReservationService {
         }
         var saved = reservationRepository.save(reservation);
 
-        return ReservationMapper.reservationRequestMapper(saved);
+        return ReservationMapper.reservationToResponseMapper(saved);
     }
 
     //Metoder der sletter en reservation
