@@ -9,6 +9,8 @@ import com.example.kinoxpbackend.Repository.ReservationRepository;
 import com.example.kinoxpbackend.Repository.ScreeningRepository;
 import com.example.kinoxpbackend.Repository.SeatRepository;
 import com.example.kinoxpbackend.dto.ReservationRequest;
+import com.example.kinoxpbackend.dto.ReservationResponse;
+import com.example.kinoxpbackend.mapper.ReservationMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,62 +23,39 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ScreeningRepository screeningRepository;
     private final SeatRepository seatRepository;
-
-    public ReservationService(ReservationRepository reservationRepository, ScreeningRepository screeningRepository, SeatRepository seatRepository){
+    public ReservationService(ReservationRepository reservationRepository, ScreeningRepository screeningRepository,
+                              SeatRepository seatRepository){
         this.reservationRepository = reservationRepository;
         this.screeningRepository = screeningRepository;
         this.seatRepository = seatRepository;
     }
 
     //metode der henter alle reservations
-    public List<ReservationRequest> getAllReservations(){
+    public List<ReservationResponse> getAllReservations(){
         var reservations = reservationRepository.findAll();
-        List<ReservationRequest> requests = new ArrayList<>();
+        List<ReservationResponse> requests = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            requests.add(reservationRequestMapper(reservation));
+            requests.add(ReservationMapper.reservationRequestMapper(reservation));
         }
 
         return requests;
     }
 
-    private Reservation reservationMapper(ReservationRequest request){
-        Reservation reservation = new Reservation();
-        reservation.setCustomerName(request.customerName());
-        reservation.setCustomerEmail(request.customerEmail());
-        reservation.setCreationDate(request.creationDate());
-        reservation.setPrice(request.price());
-        reservation.setId(request.id());
-        return reservation;
-    }
 
-    private ReservationRequest reservationRequestMapper(Reservation reservation){
-        return new ReservationRequest(
-                reservation.getId(),
-                reservation.getCustomerName(),
-                reservation.getCustomerEmail(),
-                reservation.getCreationDate(),
-                reservation.getPrice(),
-                reservation.getScreening().getId(),
-                reservation.getSeats()
-                        .stream()
-                        .map(Seat::getId)
-                        .toList()
-        );
-    }
 
     //metode der henter en bestemt reservations på id
-    public ReservationRequest getReservationById(Long id){
+    public ReservationResponse getReservationById(Long id){
         Optional<Reservation> reservationOptional = reservationRepository.findById(id);
 
         if(reservationOptional.isEmpty()){
          throw new NotfoundException("Reservation with id " + id + " not found");
         }
 
-        return reservationRequestMapper(reservationOptional.get());
+        return ReservationMapper.reservationRequestMapper(reservationOptional.get());
     }
 
-    public ReservationRequest createReservation(ReservationRequest request) {
-        Reservation reservation = reservationMapper(request);
+    public ReservationResponse createReservation(ReservationRequest request) {
+        Reservation reservation = ReservationMapper.reservationMapper(request);
 
         Screening screening = screeningRepository.findById(request.screeningId())
                 .orElseThrow(() -> new RuntimeException("Screening not found"));
@@ -91,7 +70,7 @@ public class ReservationService {
         }
         var saved = reservationRepository.save(reservation);
 
-        return reservationRequestMapper(saved);
+        return ReservationMapper.reservationRequestMapper(saved);
     }
 
     //Metoder der sletter en reservation

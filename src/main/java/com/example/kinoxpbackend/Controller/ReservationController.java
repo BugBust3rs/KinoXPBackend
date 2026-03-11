@@ -3,6 +3,7 @@ package com.example.kinoxpbackend.Controller;
 import com.example.kinoxpbackend.Model.Reservation;
 import com.example.kinoxpbackend.Service.ReservationService;
 import com.example.kinoxpbackend.dto.ReservationRequest;
+import com.example.kinoxpbackend.dto.ReservationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,20 +22,20 @@ public class ReservationController {
 
     //Henter alle reservations
     @GetMapping
-    public ResponseEntity<List<ReservationRequest>> getAllReservations(){
+    public ResponseEntity<List<ReservationResponse>> getAllReservations(){
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
 
 
     //Henter en bestem reservation på id
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationRequest> getReservation(@PathVariable Long id){
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id){
        return ResponseEntity.ok(reservationService.getReservationById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<ReservationRequest> createReservation(@RequestBody ReservationRequest request) {
-        ReservationRequest reservation = reservationService.createReservation(request);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+        ReservationResponse reservation = reservationService.createReservation(request);
         return ResponseEntity.ok(reservation);
     }
 
