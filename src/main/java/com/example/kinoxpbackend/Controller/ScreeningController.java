@@ -2,6 +2,7 @@ package com.example.kinoxpbackend.Controller;
 
 import com.example.kinoxpbackend.Model.Screening;
 import com.example.kinoxpbackend.Service.ScreeningService;
+import com.example.kinoxpbackend.dto.ScreeningRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +39,8 @@ public class ScreeningController {
 
     //tilføjer en ny film
     @PostMapping
-    public ResponseEntity<Screening> createScreening(@RequestBody Screening screening){
-        Screening newScreening = screeningService.createScreening(screening);
+    public ResponseEntity<Screening> createScreening(@RequestBody ScreeningRequest request){
+        Screening newScreening = screeningService.createScreening(request);
         return ResponseEntity.created(URI.create("/screenings/" + newScreening.getId())).body(newScreening);
     }
 

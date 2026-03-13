@@ -2,6 +2,7 @@ package com.example.kinoxpbackend.Controller;
 
 import com.example.kinoxpbackend.Model.Movie;
 import com.example.kinoxpbackend.Service.MovieService;
+import com.example.kinoxpbackend.dto.MovieRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        Movie newMovie = movieService.createMovie(movie);
+    public ResponseEntity<Movie> createMovie(@RequestBody MovieRequest request) {
+        Movie newMovie = movieService.createMovie(request);
         return ResponseEntity.created(URI.create("/movies/" + newMovie.getId())).body(newMovie);
 
     }
