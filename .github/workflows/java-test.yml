@@ -2,10 +2,10 @@ name: Java test with caching
 on:
   push:
     branches:
-      - ci-pipeline
+      - main
   pull_request:
     branches:
-      - ci-pipeline
+      - main
   workflow_dispatch:
 
 jobs:
