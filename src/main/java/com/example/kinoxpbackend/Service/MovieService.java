@@ -3,8 +3,11 @@ package com.example.kinoxpbackend.Service;
 import com.example.kinoxpbackend.Exception.NotfoundException;
 import com.example.kinoxpbackend.Model.Movie;
 import com.example.kinoxpbackend.Repository.MovieRepository;
+import com.example.kinoxpbackend.dto.MovieRequest;
+import com.example.kinoxpbackend.mapper.MovieMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +24,16 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Movie createMovie(Movie movie) {
+    public Movie createMovie(MovieRequest request) {
+        Movie movie = MovieMapper.requestToMovieMapper(request);
+        if (request.image() != null) {
+            String base64 = request.image().contains(",")
+                    ? request.image().split(",")[1]
+                    : request.image();
+            movie.setImage(Base64.getDecoder().decode(base64));
+        }
+
+
         return movieRepository.save(movie);
     }
 
