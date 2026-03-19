@@ -68,6 +68,6 @@ public class MovieService {
         if (movieOptional.isEmpty()) {
             throw new NotfoundException("This movie does not exist");
         }
-        movieRepository.deleteById(id);
+        movieRepository.delete(movieOptional.get());
     }
 }

@@ -3,6 +3,7 @@ package com.example.kinoxpbackend.Controller;
 import com.example.kinoxpbackend.Model.Screening;
 import com.example.kinoxpbackend.Service.ScreeningService;
 import com.example.kinoxpbackend.dto.ScreeningRequest;
+import com.example.kinoxpbackend.dto.ScreeningResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ScreeningController {
 
     //Henter en bestemt screening
     @GetMapping("{id}")
-    public ResponseEntity<Screening> getScreening(@PathVariable Long id){
+    public ResponseEntity<ScreeningResponse> getScreening(@PathVariable Long id){
         return ResponseEntity.ok(screeningService.getScreeningById(id));
     }
 

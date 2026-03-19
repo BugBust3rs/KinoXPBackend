@@ -1,6 +1,10 @@
 package com.example.kinoxpbackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Movie {
@@ -13,11 +17,26 @@ public class Movie {
     private String category;
     private int ageLimit;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Screening> screenings = new ArrayList<>();
+
     @Lob
     private byte[] image;
 
     public Movie() {}
 
+    public List<Screening> getScreenings() {
+        return screenings;
+    }
+
+    public void setScreenings(List<Screening> screenings) {
+        this.screenings = screenings;
+    }
+    public void addScreening(Screening screening){
+        screenings.add(screening);
+        screening.setMovie(this);
+    }
     public Movie(String title, int durationMinutes, String description, String category, int ageLimit, byte[] image) {
         this.title = title;
         this.durationMinutes = durationMinutes;
@@ -25,8 +44,8 @@ public class Movie {
         this.category = category;
         this.ageLimit = ageLimit;
         this.image = image;
-    }
 
+    }
     public Long getId() {
         return id;
     }

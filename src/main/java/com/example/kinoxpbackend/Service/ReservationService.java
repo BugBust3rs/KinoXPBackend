@@ -64,7 +64,6 @@ public class ReservationService {
         for (Long seatId : request.seatIds()) {
             Seat seat = seatRepository.findById(seatId)
                     .orElseThrow(() -> new RuntimeException("Seat not found"));
-
             seat.setReserved(true);
             reservation.addSeat(seat);
         }

@@ -1,5 +1,6 @@
 package com.example.kinoxpbackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -14,7 +15,8 @@ public class Screening {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
+    @JsonBackReference
     private Movie movie;
 
     @ManyToOne
