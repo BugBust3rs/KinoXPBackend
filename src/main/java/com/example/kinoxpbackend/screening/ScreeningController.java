@@ -1,7 +1,5 @@
-package com.example.kinoxpbackend.Controller;
+package com.example.kinoxpbackend.screening;
 
-import com.example.kinoxpbackend.Model.Screening;
-import com.example.kinoxpbackend.Service.ScreeningService;
 import com.example.kinoxpbackend.dto.ScreeningRequest;
 import com.example.kinoxpbackend.dto.ScreeningResponse;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/screenings")
-public class ScreeningController {
+class ScreeningController {
     private ScreeningService screeningService;
 
     public ScreeningController(ScreeningService screeningService) {
@@ -29,7 +27,7 @@ public class ScreeningController {
     //Henter en bestemt screening
     @GetMapping("{id}")
     public ResponseEntity<ScreeningResponse> getScreening(@PathVariable Long id){
-        return ResponseEntity.ok(screeningService.getScreeningById(id));
+        return ResponseEntity.ok(screeningService.getScreeningResponseById(id));
     }
 
     // Get screenings for a movie

@@ -1,4 +1,4 @@
-package com.example.kinoxpbackend.Exception;
+package com.example.kinoxpbackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

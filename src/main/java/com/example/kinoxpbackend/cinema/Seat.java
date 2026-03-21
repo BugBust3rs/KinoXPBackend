@@ -1,7 +1,7 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.cinema;
 
-import com.example.kinoxpbackend.Model.Reservation;
-import com.example.kinoxpbackend.Model.Screening;
+import com.example.kinoxpbackend.reservation.Reservation;
+import com.example.kinoxpbackend.screening.Screening;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

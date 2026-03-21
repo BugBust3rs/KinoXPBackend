@@ -1,5 +1,6 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.movie;
 
+import com.example.kinoxpbackend.screening.Screening;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 

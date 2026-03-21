@@ -1,4 +1,4 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.cinema;
 
 public enum ModularSeating {
     COWBOYROW,

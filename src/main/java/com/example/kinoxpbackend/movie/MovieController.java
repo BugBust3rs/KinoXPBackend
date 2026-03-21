@@ -1,7 +1,5 @@
-package com.example.kinoxpbackend.Controller;
+package com.example.kinoxpbackend.movie;
 
-import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Service.MovieService;
 import com.example.kinoxpbackend.dto.MovieRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
-public class MovieController {
+class MovieController {
 
     private final MovieService movieService;
 

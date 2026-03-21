@@ -1,10 +1,16 @@
 package com.example.kinoxpbackend.config;
 
-import com.example.kinoxpbackend.Model.*;
-import com.example.kinoxpbackend.Repository.HallRepository;
-import com.example.kinoxpbackend.Repository.MovieRepository;
-import com.example.kinoxpbackend.Repository.ReservationRepository;
-import com.example.kinoxpbackend.Repository.ScreeningRepository;
+import com.example.kinoxpbackend.cinema.*;
+import com.example.kinoxpbackend.dto.MovieRequest;
+import com.example.kinoxpbackend.dto.ReservationRequest;
+import com.example.kinoxpbackend.dto.ScreeningRequest;
+import com.example.kinoxpbackend.mapper.ReservationMapper;
+import com.example.kinoxpbackend.mapper.ScreeningMapper;
+import com.example.kinoxpbackend.movie.Movie;
+import com.example.kinoxpbackend.movie.MovieService;
+import com.example.kinoxpbackend.reservation.Reservation;
+import com.example.kinoxpbackend.reservation.ReservationService;
+import com.example.kinoxpbackend.screening.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,37 +19,41 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Configuration
 public class InitializeData {
 
-    private byte[] loadImageBytes(String path) throws IOException {
+    private String loadImageBytes(String path) throws IOException {
         ClassPathResource resource = new ClassPathResource(path);
-        return resource.getInputStream().readAllBytes();
+        byte[] bytes = resource.getInputStream().readAllBytes();
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
     @Bean
     CommandLineRunner initData(
-            MovieRepository movieRepository,
-            HallRepository hallRepository,
-            ScreeningRepository screeningRepository,
-            ReservationRepository reservationRepository
+            MovieService movieService,
+            HallService hallService,
+            ScreeningService screeningService,
+            ReservationService reservationService
     ) {
         return args -> {
 
             // Optional: clear old data so you do not get duplicates on every startup
-            reservationRepository.deleteAll();
-            screeningRepository.deleteAll();
-            hallRepository.deleteAll();
-            movieRepository.deleteAll();
+            reservationService.deleteAll();
+            screeningService.deleteAll();
+            hallService.deleteAll();
+            movieService.deleteAll();
 
             // -------------------------
             // MOVIES
             // -------------------------
             List<Movie> movies = new ArrayList<>();
 
-            movies.add(movieRepository.save(new Movie(
+            movies.add(movieService.createMovie(new MovieRequest(
                     "Inception",
                     148,
                     "A thief who steals corporate secrets through dream-sharing technology.",
@@ -52,7 +62,7 @@ public class InitializeData {
                     loadImageBytes("images/inception.jpg.webp")
             )));
 
-            movies.add(movieRepository.save(new Movie(
+            movies.add(movieService.createMovie(new MovieRequest(
                     "The Dark Knight",
                     152,
                     "Batman faces the Joker, a criminal mastermind spreading chaos in Gotham.",
@@ -61,7 +71,7 @@ public class InitializeData {
                     loadImageBytes("images/darkknight.webp")
             )));
 
-            movies.add(movieRepository.save(new Movie(
+            movies.add(movieService.createMovie(new MovieRequest(
                     "Interstellar",
                     169,
                     "A team travels through a wormhole in space to ensure humanity's survival.",
@@ -70,7 +80,7 @@ public class InitializeData {
                     loadImageBytes("images/Interstellar.jpg")
             )));
 
-            movies.add(movieRepository.save(new Movie(
+            movies.add(movieService.createMovie(new MovieRequest(
                     "Avengers: Endgame",
                     181,
                     "The Avengers assemble once more to reverse Thanos' actions.",
@@ -79,7 +89,7 @@ public class InitializeData {
                     loadImageBytes("images/avengers-endgame-journey-s-end-i73600.jpg")
             )));
 
-            movies.add(movieRepository.save(new Movie(
+            movies.add(movieService.createMovie(new MovieRequest(
                     "The Lion King",
                     88,
                     "A young lion prince flees his kingdom only to learn the true meaning of responsibility.",
@@ -96,14 +106,14 @@ public class InitializeData {
             smallHall.setRows(20);
             smallHall.setCols(12);
             smallHall.setModularSeating(ModularSeating.BASICROW);
-            smallHall = hallRepository.save(smallHall);
+            smallHall = hallService.createHall(smallHall);
 
             Hall largeHall = new Hall();
             largeHall.setName("Large Hall");
             largeHall.setRows(25);
             largeHall.setCols(16);
             largeHall.setModularSeating(ModularSeating.COWBOYROW);
-            largeHall = hallRepository.save(largeHall);
+            largeHall = hallService.createHall(largeHall);
 
             List<Hall> halls = List.of(smallHall, largeHall);
 
@@ -138,31 +148,16 @@ public class InitializeData {
                             .withHour(hours[j])
                             .withMinute(0);
 
-                    Screening screening = new Screening(
-                            movie,
-                            hall,
+                    ScreeningRequest screening = new ScreeningRequest(
+                            movie.getId(),
+                            hall.getId(),
                             screeningTime,
                             basePrice,
                             is3D
                     );
-                    for (int l = 1; l <= screening.getHall().getRows(); l++) {
-                        for (int c = 1; c <= screening.getHall().getCols(); c++) {
-                            ModularSeating modularSeating = ModularSeating.BASICROW;
-
-                            if(l < 3){
-                                modularSeating = ModularSeating.COWBOYROW;
-                            } else if (l > (screening.getHall().getRows() -3)) {
-                                modularSeating = ModularSeating.COUCHROW;
-                            }
-
-                            Seat seat = new Seat(modularSeating,l, c);
-
-                            screening.addSeat(seat);
-                        }
-                    }
 
 
-                    screenings.add(screeningRepository.save(screening));
+                    screenings.add(screeningService.createScreening(screening));
                 }
             }
 
@@ -181,7 +176,7 @@ public class InitializeData {
                 double totalPrice = screening.getBasePrice() * seatCount;
 
                 reservation.setPrice(totalPrice);
-                reservation.setScreening(screening);
+                screening.addReservation(reservation);
 
                 for (int s = 0; s < seatCount; s++) {
                     int row = (i + s) % screening.getHall().getRows() + 1;
@@ -197,9 +192,27 @@ public class InitializeData {
                     seatToReserve.setReservation(reservation);
                     reservation.addSeat(seatToReserve);
                 }
+                List<Long> seatIds = reservation.getSeats().stream()
+                        .map(Seat::getId)
+                        .collect(Collectors.toList());
+                ReservationRequest request = new ReservationRequest(
+                        reservation.getCustomerName(),
+                        reservation.getCustomerEmail(),
+                        reservation.getCreationDate(),
+                        reservation.getPrice(),
+                        reservation.getScreening().getId(),
+                        seatIds
+                );
 
-                reservationRepository.save(reservation);
-                screeningRepository.save(screening);
+                ScreeningRequest screeningRequest = new ScreeningRequest(
+                        screening.getMovie().getId(),
+                        screening.getHall().getId(),
+                        screening.getStartTime(),
+                        screening.getBasePrice(),
+                        true
+                );
+                reservationService.createReservation(request);
+                screeningService.createScreening(screeningRequest);
 
             }
         };

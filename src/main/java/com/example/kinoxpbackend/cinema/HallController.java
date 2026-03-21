@@ -1,7 +1,5 @@
-package com.example.kinoxpbackend.Controller;
+package com.example.kinoxpbackend.cinema;
 
-import com.example.kinoxpbackend.Model.Hall;
-import com.example.kinoxpbackend.Service.HallService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/halls")
-public class HallController {
+class HallController {
 
     private final HallService hallService;
 

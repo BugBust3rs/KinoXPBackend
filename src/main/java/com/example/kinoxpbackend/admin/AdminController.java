@@ -1,6 +1,5 @@
-package com.example.kinoxpbackend.Controller;
+package com.example.kinoxpbackend.admin;
 
-import com.example.kinoxpbackend.Service.AdminService;
 import com.example.kinoxpbackend.dto.LoginRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+class AdminController {
 
 
     private final AdminService adminService;

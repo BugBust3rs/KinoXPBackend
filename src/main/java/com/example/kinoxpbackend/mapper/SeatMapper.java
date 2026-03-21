@@ -1,7 +1,6 @@
 package com.example.kinoxpbackend.mapper;
 
-import com.example.kinoxpbackend.Model.Seat;
-import com.example.kinoxpbackend.dto.ReservationResponse;
+import com.example.kinoxpbackend.cinema.Seat;
 import com.example.kinoxpbackend.dto.SeatResponse;
 
 public class SeatMapper {

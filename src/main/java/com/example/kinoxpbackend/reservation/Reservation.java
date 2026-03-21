@@ -1,7 +1,7 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.reservation;
 
-import com.example.kinoxpbackend.Model.Screening;
-import com.example.kinoxpbackend.Model.Seat;
+import com.example.kinoxpbackend.cinema.Seat;
+import com.example.kinoxpbackend.screening.Screening;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -23,6 +23,7 @@ public class Reservation {
     private double price;
 
     @ManyToOne
+    @JoinColumn(name = "screening_id")
     private Screening screening;
 
     @JsonManagedReference("reservation-seats")

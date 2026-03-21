@@ -1,6 +1,6 @@
 package com.example.kinoxpbackend.dto;
 
-import com.example.kinoxpbackend.Model.ModularSeating;
+import com.example.kinoxpbackend.cinema.ModularSeating;
 
 public record SeatResponse(
         Long id,

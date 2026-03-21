@@ -1,12 +1,8 @@
 package com.example.kinoxpbackend.mapper;
 
-import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Model.Reservation;
-import com.example.kinoxpbackend.Model.Screening;
+import com.example.kinoxpbackend.movie.Movie;
 import com.example.kinoxpbackend.dto.MovieRequest;
 import com.example.kinoxpbackend.dto.MovieResponse;
-import com.example.kinoxpbackend.dto.ReservationResponse;
-import com.example.kinoxpbackend.dto.ScreeningRequest;
 
 public class MovieMapper {
     public static Movie requestToMovieMapper(MovieRequest request){
@@ -20,6 +16,7 @@ public class MovieMapper {
     }
    public static MovieResponse movieToMovieResponse(Movie movie){
         return new MovieResponse(
+                movie.getId(),
                 movie.getTitle(),
                 movie.getDurationMinutes(),
                 movie.getDescription(),

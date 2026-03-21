@@ -1,5 +1,9 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.screening;
 
+import com.example.kinoxpbackend.movie.Movie;
+import com.example.kinoxpbackend.cinema.Hall;
+import com.example.kinoxpbackend.cinema.Seat;
+import com.example.kinoxpbackend.reservation.Reservation;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -22,6 +26,9 @@ public class Screening {
     @ManyToOne
     @JoinColumn(name = "hall_id")
     private Hall hall;
+
+    @OneToMany(mappedBy = "screening", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
     @JsonManagedReference("screening-seats")
     @OneToMany(mappedBy = "screening", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,6 +57,10 @@ public class Screening {
         this.seats = seats;
     }
 
+    public void addReservation(Reservation reservation){
+        reservations.add(reservation);
+        reservation.setScreening(this);
+    }
     public void addSeat(Seat seat) {
         seats.add(seat);
         seat.setScreening(this);

@@ -1,7 +1,6 @@
 package com.example.kinoxpbackend.mapper;
 
-import com.example.kinoxpbackend.Model.Reservation;
-import com.example.kinoxpbackend.Model.Screening;
+import com.example.kinoxpbackend.screening.Screening;
 import com.example.kinoxpbackend.dto.*;
 
 import java.util.List;

@@ -1,17 +1,21 @@
-package com.example.kinoxpbackend.Service;
+package com.example.kinoxpbackend.reservation;
 
 
-import com.example.kinoxpbackend.Exception.NotfoundException;
-import com.example.kinoxpbackend.Model.Reservation;
-import com.example.kinoxpbackend.Model.Screening;
-import com.example.kinoxpbackend.Model.Seat;
-import com.example.kinoxpbackend.Repository.ReservationRepository;
-import com.example.kinoxpbackend.Repository.ScreeningRepository;
-import com.example.kinoxpbackend.Repository.SeatRepository;
+import com.example.kinoxpbackend.cinema.HallService;
+import com.example.kinoxpbackend.cinema.SeatService;
+import com.example.kinoxpbackend.dto.ScreeningRequest;
+import com.example.kinoxpbackend.dto.ScreeningResponse;
+import com.example.kinoxpbackend.exception.NotfoundException;
+import com.example.kinoxpbackend.mapper.ScreeningMapper;
+import com.example.kinoxpbackend.movie.MovieService;
+import com.example.kinoxpbackend.screening.Screening;
+import com.example.kinoxpbackend.cinema.Seat;
 import com.example.kinoxpbackend.dto.ReservationRequest;
 import com.example.kinoxpbackend.dto.ReservationResponse;
 import com.example.kinoxpbackend.mapper.ReservationMapper;
+import com.example.kinoxpbackend.screening.ScreeningService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +25,18 @@ import java.util.Optional;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ScreeningRepository screeningRepository;
-    private final SeatRepository seatRepository;
-    public ReservationService(ReservationRepository reservationRepository, ScreeningRepository screeningRepository,
-                              SeatRepository seatRepository){
+    private final ScreeningService screeningService;
+    private final SeatService seatService;
+    private final MovieService movieService;
+    private final HallService hallService;
+
+    public ReservationService(ReservationRepository reservationRepository, ScreeningService screeningService,
+                              SeatService seatService, MovieService movieService, HallService hallService){
         this.reservationRepository = reservationRepository;
-        this.screeningRepository = screeningRepository;
-        this.seatRepository = seatRepository;
+        this.screeningService = screeningService;
+        this.seatService = seatService;
+        this.movieService = movieService;
+        this.hallService = hallService;
     }
 
     //metode der henter alle reservations
@@ -54,19 +63,17 @@ public class ReservationService {
         return ReservationMapper.reservationToResponseMapper(reservationOptional.get());
     }
 
+    @Transactional(readOnly=true)
     public ReservationResponse createReservation(ReservationRequest request) {
         Reservation reservation = ReservationMapper.requestToReservationMapper(request);
-
-        Screening screening = screeningRepository.findById(request.screeningId())
-                .orElseThrow(() -> new RuntimeException("Screening not found"));
-        reservation.setScreening(screening);
+        Screening screening = screeningService.getScreeningById(request.screeningId());
 
         for (Long seatId : request.seatIds()) {
-            Seat seat = seatRepository.findById(seatId)
-                    .orElseThrow(() -> new RuntimeException("Seat not found"));
+            Seat seat = seatService.findById(seatId);
             seat.setReserved(true);
             reservation.addSeat(seat);
         }
+        screening.addReservation(reservation);
         var saved = reservationRepository.save(reservation);
 
         return ReservationMapper.reservationToResponseMapper(saved);
@@ -78,4 +85,7 @@ public class ReservationService {
     }
 
 
+    public void deleteAll() {
+        reservationRepository.deleteAll();
+    }
 }

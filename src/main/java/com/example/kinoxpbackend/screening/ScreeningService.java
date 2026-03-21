@@ -1,25 +1,22 @@
-package com.example.kinoxpbackend.Service;
+package com.example.kinoxpbackend.screening;
 
-import com.example.kinoxpbackend.Model.ModularSeating;
-import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Model.Screening;
-import com.example.kinoxpbackend.Model.Seat;
-import com.example.kinoxpbackend.Repository.HallRepository;
-import com.example.kinoxpbackend.Repository.ScreeningRepository;
+import com.example.kinoxpbackend.cinema.HallService;
+import com.example.kinoxpbackend.movie.Movie;
+import com.example.kinoxpbackend.movie.MovieService;
 import com.example.kinoxpbackend.dto.*;
 import com.example.kinoxpbackend.mapper.HallMapper;
 import com.example.kinoxpbackend.mapper.MovieMapper;
 import com.example.kinoxpbackend.mapper.ScreeningMapper;
 import com.example.kinoxpbackend.mapper.SeatMapper;
-import jakarta.transaction.Transactional;
+import com.example.kinoxpbackend.cinema.ModularSeating;
+import com.example.kinoxpbackend.cinema.Seat;
+
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import com.example.kinoxpbackend.Exception.NotfoundException;
+import com.example.kinoxpbackend.exception.NotfoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +27,12 @@ public class ScreeningService {
     private static final Logger log = LoggerFactory.getLogger(ScreeningService.class);
     private final ScreeningRepository screeningRepository;
     private final MovieService movieService;
-    private final HallRepository hallRepository;
+    private final HallService hallService;
 
-    public ScreeningService(ScreeningRepository screeningRepository, MovieService movieService, HallRepository hallRepository) {
+    public ScreeningService(ScreeningRepository screeningRepository, MovieService movieService, HallService hallService) {
         this.screeningRepository = screeningRepository;
         this.movieService = movieService;
-        this.hallRepository = hallRepository;
+        this.hallService = hallService;
     }
 
     //Metode der henter alle Screening
@@ -44,28 +41,34 @@ public class ScreeningService {
     }
 
     //Metode der henter en bestemt screening
-    public ScreeningResponse getScreeningById(Long id) {
-        Optional<Screening> screeningOptional = screeningRepository.findById(id);
-        if (screeningOptional.isEmpty()) {
-            throw new NotfoundException("Screening with id " + id + " not found");
-        }
-        Screening sc = screeningOptional.get();
-        MovieResponse movieResponse = MovieMapper.movieToMovieResponse(sc.getMovie());
-        HallResponse hallResponse = HallMapper.hallToHallResponse(sc.getHall());
+    @Transactional(readOnly=true)
+    public ScreeningResponse getScreeningResponseById(Long id) {
+        var screening = screeningRepository.findByIdWithReservations(id)
+                .orElseThrow(() -> new NotfoundException("Screening with id " + id + " not found"));
+
+
+        MovieResponse movieResponse = MovieMapper.movieToMovieResponse(screening.getMovie());
+        HallResponse hallResponse = HallMapper.hallToHallResponse(screening.getHall());
 
         List<SeatResponse> seatResponses = new ArrayList<>();
-        for (Seat seat : sc.getSeats()){
+        for (Seat seat : screening.getSeats()){
             seatResponses.add(SeatMapper.SeatToSeatResponse(seat));
         }
 
-        return ScreeningMapper.screeningToScreeningResponse(sc, movieResponse, hallResponse, seatResponses);
+        return ScreeningMapper.screeningToScreeningResponse(screening, movieResponse, hallResponse, seatResponses);
     }
+
+    public Screening getScreeningById(Long id){
+        return screeningRepository.findById(id)
+                .orElseThrow(() -> new NotfoundException("Screening with id " + id + " not found"));
+    }
+
 
     //Metode der opretter en screening
     @Transactional
     public Screening createScreening(ScreeningRequest request) {
         Screening screening = ScreeningMapper.requestToScreeningMapper(request);
-        var hall = hallRepository.findById(request.hallId()).orElseThrow(() -> new NotfoundException("hall not found"));
+        var hall = hallService.findById(request.hallId());
         screening.setHall(hall);
 
         var movie = movieService.getMovieById(request.movieId());
@@ -94,11 +97,7 @@ public class ScreeningService {
 
     //Metode der opdaterer en screening
     public Screening updateScreening(Long id, Screening screening) {
-//        Optional<Screening> screeningOptional = screeningRepository.findById(id);
-//        if(screeningOptional.isEmpty()){
-//            throw new NotFoundException("Screening with id " + id + " not found");
-//        }
-        Screening screening1 = screeningRepository.findById(id)
+        var screening1 = screeningRepository.findById(id)
                 .orElseThrow(() -> new NotfoundException("Screening with id " + id + " not found"));
         screening1.setMovie(screening.getMovie());
         screening1.setHall(screening.getHall());
@@ -117,5 +116,9 @@ public class ScreeningService {
     public @Nullable List<Screening> getScreeningsByMovieId(Long movieId) {
         Movie movie = movieService.getMovieById(movieId);
         return screeningRepository.getScreeningsWithMovie(movie);
+    }
+
+    public void deleteAll() {
+        screeningRepository.deleteAll();
     }
 }

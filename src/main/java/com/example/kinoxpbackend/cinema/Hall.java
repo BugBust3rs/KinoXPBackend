@@ -1,5 +1,6 @@
-package com.example.kinoxpbackend.Model;
+package com.example.kinoxpbackend.cinema;
 
+import com.example.kinoxpbackend.screening.Screening;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

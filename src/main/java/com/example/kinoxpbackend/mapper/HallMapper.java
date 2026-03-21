@@ -1,6 +1,6 @@
 package com.example.kinoxpbackend.mapper;
 
-import com.example.kinoxpbackend.Model.Hall;
+import com.example.kinoxpbackend.cinema.Hall;
 import com.example.kinoxpbackend.dto.HallResponse;
 
 public class HallMapper {

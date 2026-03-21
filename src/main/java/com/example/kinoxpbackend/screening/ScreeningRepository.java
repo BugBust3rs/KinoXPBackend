@@ -1,20 +1,20 @@
-package com.example.kinoxpbackend.Repository;
+package com.example.kinoxpbackend.screening;
 
-import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Model.Screening;
-import jakarta.persistence.Entity;
+import com.example.kinoxpbackend.movie.Movie;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ScreeningRepository extends JpaRepository<Screening, Long> {
+interface ScreeningRepository extends JpaRepository<Screening, Long> {
     @EntityGraph(attributePaths = "movie")
     @Query("Select s FROM Screening s where s.movie = :movie ")
     List<Screening> getScreeningsWithMovie(@Param("movie") Movie movie);
 
     List<Screening> getScreeningsByMovie(Movie movie);
-
+    @Query("SELECT s FROM Screening s LEFT JOIN FETCH s.reservations WHERE s.id = :id")
+    Optional<Screening> findByIdWithReservations(@Param("id") Long id);
 }

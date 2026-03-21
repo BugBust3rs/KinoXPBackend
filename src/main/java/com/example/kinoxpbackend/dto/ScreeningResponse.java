@@ -1,7 +1,5 @@
 package com.example.kinoxpbackend.dto;
 
-import com.example.kinoxpbackend.Model.Hall;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

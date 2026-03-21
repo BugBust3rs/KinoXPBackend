@@ -1,8 +1,6 @@
-package com.example.kinoxpbackend.Service;
+package com.example.kinoxpbackend.movie;
 
-import com.example.kinoxpbackend.Exception.NotfoundException;
-import com.example.kinoxpbackend.Model.Movie;
-import com.example.kinoxpbackend.Repository.MovieRepository;
+import com.example.kinoxpbackend.exception.NotfoundException;
 import com.example.kinoxpbackend.dto.MovieRequest;
 import com.example.kinoxpbackend.mapper.MovieMapper;
 import org.springframework.stereotype.Service;
@@ -69,5 +67,9 @@ public class MovieService {
             throw new NotfoundException("This movie does not exist");
         }
         movieRepository.delete(movieOptional.get());
+    }
+
+    public void deleteAll() {
+        movieRepository.deleteAll();
     }
 }

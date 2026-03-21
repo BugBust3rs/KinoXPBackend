@@ -1,4 +1,4 @@
-package com.example.kinoxpbackend.Exception;
+package com.example.kinoxpbackend.exception;
 
 public class NotfoundException extends RuntimeException {
     public NotfoundException(String message) {
