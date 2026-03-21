@@ -1,6 +1,6 @@
 package com.example.kinoxpbackend.dto;
 
-import com.example.kinoxpbackend.Model.Seat;
+import com.example.kinoxpbackend.cinema.Seat;
 
 import java.time.LocalDateTime;
 import java.util.List;

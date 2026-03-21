@@ -1,7 +1,6 @@
 package com.example.kinoxpbackend.mapper;
 
-import com.example.kinoxpbackend.Model.Reservation;
-import com.example.kinoxpbackend.Model.Seat;
+import com.example.kinoxpbackend.reservation.Reservation;
 import com.example.kinoxpbackend.dto.ReservationRequest;
 import com.example.kinoxpbackend.dto.ReservationResponse;
 

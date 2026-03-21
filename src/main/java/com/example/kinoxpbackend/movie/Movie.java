@@ -1,0 +1,105 @@
+package com.example.kinoxpbackend.movie;
+
+import com.example.kinoxpbackend.screening.Screening;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Movie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private int durationMinutes;
+    private String description;
+    private String category;
+    private int ageLimit;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Screening> screenings = new ArrayList<>();
+
+    @Lob
+    private byte[] image;
+
+    public Movie() {}
+
+    public List<Screening> getScreenings() {
+        return screenings;
+    }
+
+    public void setScreenings(List<Screening> screenings) {
+        this.screenings = screenings;
+    }
+    public void addScreening(Screening screening){
+        screenings.add(screening);
+        screening.setMovie(this);
+    }
+    public Movie(String title, int durationMinutes, String description, String category, int ageLimit, byte[] image) {
+        this.title = title;
+        this.durationMinutes = durationMinutes;
+        this.description = description;
+        this.category = category;
+        this.ageLimit = ageLimit;
+        this.image = image;
+
+    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getAgeLimit() {
+        return ageLimit;
+    }
+
+    public void setAgeLimit(int ageLimit) {
+        this.ageLimit = ageLimit;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+}
